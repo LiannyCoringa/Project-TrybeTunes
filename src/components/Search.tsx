@@ -1,6 +1,8 @@
 function Search() {
   return (
-    <h1>Ola</h1>
+    <form>
+      <h1>oi</h1>
+    </form>
   );
 }
 

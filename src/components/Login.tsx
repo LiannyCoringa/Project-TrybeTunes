@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { createUser } from '../services/userAPI';
 
 function Login() {
@@ -30,19 +31,27 @@ function Login() {
         onChange={ handleChange }
       />
       { buttonHabil
-        ? <button
-            data-testid="login-submit-button"
-            onClick={ handleClick }
-        >
-          Entrar
-          </button>
-        : <button
-            data-testid="login-submit-button"
-            disabled
-            onClick={ handleClick }
-        >
-          Entrar
-          </button>}
+        ? (
+          <Link to="/search">
+            <button
+              data-testid="login-submit-button"
+              onClick={ handleClick }
+            >
+              Entrar
+            </button>
+          </Link>
+        )
+        : (
+          <Link to="/search">
+            <button
+              data-testid="login-submit-button"
+              disabled
+              onClick={ handleClick }
+            >
+              Entrar
+            </button>
+          </Link>
+        ) }
     </form>
   );
 }
