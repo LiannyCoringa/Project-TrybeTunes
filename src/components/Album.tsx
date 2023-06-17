@@ -37,6 +37,7 @@ function Album() {
           key={ obj.trackId }
           trackName={ obj.trackName }
           previewUrl={ obj.previewUrl }
+          trackId={ obj.trackId }
         />
       ))}
     </>
