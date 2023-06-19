@@ -21,7 +21,6 @@ function Profile() {
   }, []);
   if (loading) {
     return <h2>Carregando...</h2>;
-
   }
 
   return (
