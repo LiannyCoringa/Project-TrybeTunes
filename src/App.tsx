@@ -3,6 +3,8 @@ import Login from './components/Login';
 import Search from './components/Search';
 import Album from './components/Album';
 import Layout from './components/Layout';
+import Profile from './components/Profile';
+import ProfileEdit from './components/ProfileEdit';
 
 function App() {
   return (
@@ -14,8 +16,8 @@ function App() {
           <Route path="/search" element={ <Search /> } />
           <Route path="/album/:id" element={ <Album /> } />
           <Route />
-          <Route />
-          <Route />
+          <Route path="/profile" element={ <Profile /> } />
+          <Route path="/profile/edit" element={ <ProfileEdit /> } />
           <Route />
         </Route>
       </Routes>
