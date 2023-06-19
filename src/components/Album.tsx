@@ -20,7 +20,6 @@ function Album() {
         setLoading(false);
         setData(dataAPI[0]);
         setSong(dataAPI);
-        console.log(dataAPI);
       }
     };
     reqAPI();
@@ -36,9 +35,6 @@ function Album() {
         <MusicCard
           key={ obj.trackId }
           songProps={ obj }
-          // trackName={ obj.trackName }
-          // previewUrl={ obj.previewUrl }
-          // trackId={ obj.trackId }
         />
       ))}
     </>

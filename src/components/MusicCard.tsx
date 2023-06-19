@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { addSong, removeSong } from '../services/favoriteSongsAPI';
+import { useEffect, useState } from 'react';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 import { SongType } from '../types';
 
 type MusicCardProps = {
@@ -8,13 +8,33 @@ type MusicCardProps = {
 
 function MusicCard({ songProps: { trackId, trackName, previewUrl } }: MusicCardProps) {
   const [check, setCheck] = useState(false);
+  const [loading, setLoading] = useState(true);
   const handleClick = async () => {
     setCheck(!check);
-    await addSong({ trackName, trackId, previewUrl });
-    if (check === false) {
+    if (check === true) {
       await removeSong({ trackName, trackId, previewUrl });
+    } else {
+      await addSong({ trackName, trackId, previewUrl });
     }
   };
+  useEffect(() => {
+    const favorites = async () => {
+      const listFavoritesSong = await getFavoriteSongs();
+      const trackIdList = listFavoritesSong.find((obj) => obj.trackId === trackId);
+      if (trackIdList !== undefined) {
+        setCheck(true);
+      } else {
+        setCheck(false);
+      }
+      setLoading(false);
+    };
+    favorites();
+  }, []);
+
+  if (loading) {
+    return <h2>Carregando...</h2>;
+  }
+
   return (
     <div>
       <p>{ trackName }</p>
@@ -33,11 +53,22 @@ function MusicCard({ songProps: { trackId, trackName, previewUrl } }: MusicCardP
           ? <img src="/src/images/checked_heart.png" alt="favorite" />
           : <img src="/src/images/empty_heart.png" alt="favorite" />}
       </label>
-      <input
-        type="checkbox"
-        id={ `checkbox-music-${trackId}` }
-        onClick={ handleClick }
-      />
+      {check
+        ? (
+          <input
+            type="checkbox"
+            id={ `checkbox-music-${trackId}` }
+            onClick={ handleClick }
+            checked
+          />
+        )
+        : (
+          <input
+            type="checkbox"
+            id={ `checkbox-music-${trackId}` }
+            onClick={ handleClick }
+          />
+        )}
     </div>
   );
 }
