@@ -35,9 +35,10 @@ function Album() {
       {song.slice(1).map((obj) => (
         <MusicCard
           key={ obj.trackId }
-          trackName={ obj.trackName }
-          previewUrl={ obj.previewUrl }
-          trackId={ obj.trackId }
+          songProps={ obj }
+          // trackName={ obj.trackName }
+          // previewUrl={ obj.previewUrl }
+          // trackId={ obj.trackId }
         />
       ))}
     </>

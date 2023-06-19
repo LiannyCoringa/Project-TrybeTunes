@@ -1,19 +1,23 @@
 import { useState } from 'react';
+import { addSong, removeSong } from '../services/favoriteSongsAPI';
+import { SongType } from '../types';
 
 type MusicCardProps = {
-  trackName: string | undefined,
-  previewUrl: string | undefined,
-  trackId: number | undefined,
+  songProps: SongType
 };
 
-function MusicCard({ trackName, previewUrl, trackId }: MusicCardProps) {
+function MusicCard({ songProps: { trackId, trackName, previewUrl } }: MusicCardProps) {
   const [check, setCheck] = useState(false);
-  const handleChange = () => {
+  const handleClick = async () => {
     setCheck(!check);
+    await addSong({ trackName, trackId, previewUrl });
+    if (check === false) {
+      await removeSong({ trackName, trackId, previewUrl });
+    }
   };
   return (
     <div>
-      <p>{trackName}</p>
+      <p>{ trackName }</p>
       <audio data-testid="audio-component" src={ previewUrl } controls>
         <track kind="captions" />
         O seu navegador não suporta o elemento
@@ -32,7 +36,7 @@ function MusicCard({ trackName, previewUrl, trackId }: MusicCardProps) {
       <input
         type="checkbox"
         id={ `checkbox-music-${trackId}` }
-        onChange={ handleChange }
+        onClick={ handleClick }
       />
     </div>
   );
