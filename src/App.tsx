@@ -5,6 +5,7 @@ import Album from './components/Album';
 import Layout from './components/Layout';
 import Profile from './components/Profile';
 import ProfileEdit from './components/ProfileEdit';
+import Favorites from './components/Favorites';
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
         <Route path="/" element={ <Layout /> }>
           <Route path="/search" element={ <Search /> } />
           <Route path="/album/:id" element={ <Album /> } />
-          <Route />
+          <Route path="/favorites" element={ <Favorites /> } />
           <Route path="/profile" element={ <Profile /> } />
           <Route path="/profile/edit" element={ <ProfileEdit /> } />
           <Route />

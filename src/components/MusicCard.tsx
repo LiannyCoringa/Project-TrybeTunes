@@ -3,16 +3,24 @@ import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongs
 import { SongType } from '../types';
 
 type MusicCardProps = {
-  songProps: SongType
+  songProps: SongType;
+  list: number[];
+  functionList: () => void;
 };
 
-function MusicCard({ songProps: { trackId, trackName, previewUrl } }: MusicCardProps) {
+function MusicCard({
+  songProps: { trackId, trackName, previewUrl },
+  list,
+  functionList,
+}: MusicCardProps) {
   const [check, setCheck] = useState(false);
   const [loading, setLoading] = useState(true);
+
   const handleClick = async () => {
     setCheck(!check);
     if (check === true) {
       await removeSong({ trackName, trackId, previewUrl });
+      functionList();
     } else {
       await addSong({ trackName, trackId, previewUrl });
     }
@@ -20,8 +28,8 @@ function MusicCard({ songProps: { trackId, trackName, previewUrl } }: MusicCardP
   useEffect(() => {
     const favorites = async () => {
       const listFavoritesSong = await getFavoriteSongs();
-      const trackIdList = listFavoritesSong.find((obj) => obj.trackId === trackId);
-      if (trackIdList !== undefined) {
+      const trackIdList = listFavoritesSong.some((obj) => list.includes(obj.trackId));
+      if (trackIdList) {
         setCheck(true);
       } else {
         setCheck(false);
@@ -29,7 +37,7 @@ function MusicCard({ songProps: { trackId, trackName, previewUrl } }: MusicCardP
       setLoading(false);
     };
     favorites();
-  }, []);
+  }, [list]);
 
   if (loading) {
     return <h2>Carregando...</h2>;
