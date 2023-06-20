@@ -11,54 +11,48 @@ function ProfileEdit() {
     image: '',
     description: '',
   });
-  const [validationName, setValidationName] = useState(false);
-  const [validationEmail, setValidationEmail] = useState(false);
-  const [validationDescription, setValidationDescriprion] = useState(false);
-  const [validationImage, setValidationImage] = useState(false);
+  const [validation, setValidation] = useState(false);
+  const [disable, setDisable] = useState(true);
   const navigate = useNavigate();
+
   useEffect(() => {
     const user = async () => {
       const infos = await getUser();
-      if (infos) {
-        setLoading(false);
-        setInfosUser(infos);
-      }
+      setLoading(false);
+      setInfosUser(infos);
+      console.log(infosUser);
     };
     user();
   }, []);
-  const handleValidationName = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    if (target.value.length > 1) {
-    setValidationName(true);
-    setInfosUser({ ...infosUser, name: target.value })
-    };
+
+  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    setInfosUser({ ...infosUser, [target.id]: target.value });
   };
-  const handleValidationEmail = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, email, description, image } = infosUser;
+  useEffect(() => {
     const emailRegex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/i;
-    if (target.value.length > 1 && emailRegex.test(target.value)) {
-      setValidationEmail(true);
-      setInfosUser({ ...infosUser, email: target.value })
-    };
+    if (name.length > 1
+      && description.length > 1
+      && image.length > 1
+      && emailRegex.test(email)) {
+      setValidation(true);
+      setDisable(false);
+    }
+    if (validation) {
+      setDisable(false);
+    } else {
+      setDisable(true);
+    }
+  }, [name, email, description, image]);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoadingEdit(true);
+    await updateUser(infosUser);
+    setLoadingEdit(false);
+    navigate('/profile');
   };
-  const handleValidationDescription = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    if (target.value.length > 1) {
-    setValidationDescriprion(true);
-    setInfosUser({ ...infosUser, description: target.value })
-    };
-  };
-  const handleValidationImage = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    if (target.value.length > 1) {
-    setValidationImage(true);
-    setInfosUser({ ...infosUser, image: target.value })
-    };
-  };
-  const handleClick = async () => {
-        setLoadingEdit(true);
-        const userAPI = await updateUser(infosUser);
-        if (userAPI) {
-          setLoadingEdit(false);
-          navigate("/profile");
-      }
-  }
+
   if (loading) {
     return <h2>Carregando...</h2>;
   }
@@ -66,38 +60,40 @@ function ProfileEdit() {
     return <h2>Carregando...</h2>;
   }
   return (
-    <form>
+    <form onSubmit={ handleSubmit }>
       <input
         type="text"
         id="name"
         data-testid="edit-input-name"
         placeholder="Nome"
-        onChange={ handleValidationName }
+        value={ infosUser.name }
+        onChange={ handleChange }
       />
       <input
         type="text"
         id="email"
         data-testid="edit-input-email"
         placeholder="Email"
-        onChange={ handleValidationEmail }
+        value={ infosUser.email }
+        onChange={ handleChange }
       />
       <input
         type="text"
         id="description"
         data-testid="edit-input-description"
         placeholder="Description"
-        onChange={ handleValidationDescription }
+        value={ infosUser.description }
+        onChange={ handleChange }
       />
       <input
         type="text"
         id="image"
         data-testid="edit-input-image"
         placeholder="Imagem"
-        onChange={ handleValidationImage }
+        value={ infosUser.image }
+        onChange={ handleChange }
       />
-      {validationName && validationEmail && validationDescription && validationImage
-        ? <button data-testid="edit-button-save" onClick={ handleClick }>Salvar</button>
-        : <button data-testid="edit-button-save" disabled>Editar perfil</button>}
+      <button data-testid="edit-button-save" disabled={ disable }>Editar perfil</button>
     </form>
   );
 }
